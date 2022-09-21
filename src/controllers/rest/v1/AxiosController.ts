@@ -5,10 +5,11 @@ import { Get } from "@tsed/schema";
 import Axios from "axios";
 import { IncomingMessage } from "http";
 
-@Controller("/proxy")
-export class ProxyController {
+@Controller("/axios")
+export class AxiosController {
+  // axios response has been wrap with express response
   @Get("/")
-  proxy(@QueryParams("path") path: string) {
+  get(@QueryParams("path") path: string) {
     return Axios.get(`https://google.com/search?q=${path}`, {
       responseType: "stream",
     });
@@ -16,7 +17,7 @@ export class ProxyController {
 
   // is equivalent to doing that
   @Get("/")
-  async proxy2(
+  async get2(
     @Res() res: Res,
     @QueryParams("path") path: string
   ): Promise<IncomingMessage> {

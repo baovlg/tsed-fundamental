@@ -1,10 +1,10 @@
 import { Module } from "@tsed/di";
-import { CalendarController } from "../rest/v1/CalendarController";
+import { CrudController } from "../rest/v1/CrudController";
 import { LocalController } from "../rest/v1/LocalController";
 
 @Module({
   mount: {
-    "/rest/v1": [CalendarController, LocalController],
+    "/rest/v1": [CrudController, LocalController],
   },
 })
 export class ModuleV1 {}

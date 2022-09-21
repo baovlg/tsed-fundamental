@@ -1,32 +1,43 @@
 import { PlatformResponse, Res } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { PathParams, BodyParams, QueryParams } from "@tsed/platform-params";
-import { Get, Post, Property } from "@tsed/schema";
+import { PathParams } from "@tsed/platform-params";
+import { Get, MinLength, Post, Property } from "@tsed/schema";
 import { createReadStream, ReadStream } from "fs";
+import dirname from "path";
 import { Observable, of } from "rxjs";
 
-interface Calendar {
+interface Crud {
   id: string;
   name: string;
 }
 
-class Product {
-  @Property()
-  title: string;
-}
-
-@Controller("/calendars")
-export class CalendarController {
+@Controller("/cruds")
+export class CrudController {
   @Get("/")
-  get(): Promise<Calendar[]> {
+  get(): Promise<Crud[]> {
     return Promise.resolve([
       { id: "1", name: "test 1" },
       { id: "2", name: "test 2" },
     ]);
   }
 
+  @Get("/:id")
+  getDetail(id: string) {
+    return `This action returns a #${id}`;
+  }
+
+  // promise | Multiple endpoints
+  @Get("/alias/:id")
+  @Post("/:id/complexAlias")
+  async promise(
+    @PathParams("id")
+    id: string
+  ): Promise<Crud> {
+    return { id, name: "test" };
+  }
+
   // observable
-  @Get("/observable")
+  @Get("/:id/observable")
   observable(): Observable<any[]> {
     return of([]);
   }
@@ -34,7 +45,7 @@ export class CalendarController {
   // stream
   @Get("/:id/stream")
   stream(): ReadStream {
-    return createReadStream(__dirname + "/ProxyController.ts");
+    return createReadStream(dirname + "/ProxyController.ts");
   }
 
   //buffer
@@ -44,16 +55,5 @@ export class CalendarController {
     // Set contentType: res.contentType("plain/text");
 
     return Buffer.from("Hello");
-  }
-
-  // promise
-  @Get("/:id")
-  @Get("/alias/:id")
-  @Post("/:id/complexAlias")
-  async getDetail(@PathParams("id") id: string): Promise<Calendar> {
-    return {
-      id,
-      name: "test",
-    };
   }
 }
