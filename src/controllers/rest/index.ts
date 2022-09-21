@@ -3,3 +3,6 @@
  */
 
 export * from "./HelloWorldController";
+export * from "./v1/CalendarController";
+export * from "./v1/ProductController";
+export * from "./v2/ProxyController";
